@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Debug" />
+	<File name="AllNode.h" open="0" top="0" tabpos="10">
+		<Cursor position="129" topLine="0" />
+	</File>
+	<File name="autosome.h" open="1" top="0" tabpos="6">
+		<Cursor position="3031" topLine="73" />
+	</File>
+	<File name="chromosome.h" open="1" top="0" tabpos="4">
+		<Cursor position="6941" topLine="132" />
+	</File>
+	<File name="cnode.h" open="1" top="0" tabpos="3">
+		<Cursor position="3253" topLine="31" />
+	</File>
+	<File name="cytoplasm.h" open="1" top="0" tabpos="8">
+		<Cursor position="869" topLine="57" />
+	</File>
+	<File name="epiMarker.h" open="0" top="0" tabpos="10">
+		<Cursor position="6079" topLine="0" />
+	</File>
+	<File name="gene.h" open="1" top="0" tabpos="9">
+		<Cursor position="960" topLine="15" />
+	</File>
+	<File name="genotype.h" open="0" top="0" tabpos="13">
+		<Cursor position="62" topLine="0" />
+	</File>
+	<File name="individual.h" open="1" top="0" tabpos="5">
+		<Cursor position="2432" topLine="42" />
+	</File>
+	<File name="junction.h" open="1" top="0" tabpos="2">
+		<Cursor position="2437" topLine="60" />
+	</File>
+	<File name="landscape.h" open="1" top="1" tabpos="10">
+		<Cursor position="899" topLine="18" />
+	</File>
+	<File name="main.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="1003" topLine="23" />
+	</File>
+	<File name="selMarker.h" open="0" top="0" tabpos="9">
+		<Cursor position="89" topLine="75" />
+	</File>
+	<File name="sex_chromosome.h" open="1" top="0" tabpos="7">
+		<Cursor position="577" topLine="1" />
+	</File>
+	<File name="singlegene.h" open="0" top="0" tabpos="12">
+		<Cursor position="486" topLine="0" />
+	</File>
+</CodeBlocks_layout_file>
