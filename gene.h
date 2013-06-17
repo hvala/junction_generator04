@@ -10,14 +10,13 @@
 class Gene
 {
     public:
-        Gene(int chr, double pos, int phen, vector<double> ae, vector<int> d);
-        virtual ~Gene();
+        Gene(int chr, double pos, vector<double> ae);
+
 
         // Getters
         int getChr() { return chromosome; }
         double getPos() { return position; }
-        //int getPhen() { return phenotype; }
-        double getAddEffect(int i) { return add_effect[i]; }
+        double getAddEffect(int i) { return add_effects[i]; }
         int getDominance(int i) { return dominance[i]; }
 
         // Setters
@@ -25,31 +24,22 @@ class Gene
 
         // Biological Functions
         vector<int> genotype( vector<Chromosome*> );
-        double getPhenotype( vector<Chromosome*> );
 
     protected:
         int chromosome;
         double position;
-        //int phenotype;
         vector<double> add_effects;
         vector<int> dominance;
-        //Landscape landScape;
 
 };
 
 // GENE CONSTRUCTOR
-Gene::Gene(int chr, double pos, int phen, vector<double> ae, vector<int> d):
-    chromosome(chr), position(pos), phenotype(phen), add_effects(ae), dominance(d)
+Gene::Gene(int chr, double pos, vector<double> ae):
+    chromosome(chr), position(pos), add_effects(ae)
 {
 
 }
 
-
-// GENE DESTRUCTOR
-Gene::~Gene()
-{
-
-}
 
 // GET THE GENOTYPE FOR A GENE IN AN INDIVIDUAL
 vector<int> Gene::genotype(vector<Chromosome*> g)
@@ -65,11 +55,5 @@ vector<int> Gene::genotype(vector<Chromosome*> g)
     return genotype;
 }
 
-// GET THE PHENOTYPE FOR THE INDIVIDUAL BASED ON THE GENOTYPE OF THE GENE
-double Gene::getPhenotype(vector<Chromosome*> g)
-{
-    vector<int> g_type = genotype(g);
-
-}
 
 #endif // GENE_H

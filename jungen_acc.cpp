@@ -1,4 +1,7 @@
 
+#ifndef JUNGEN_ACC.CPP
+#define JUNGEN_ACC.CPP
+
 #include <cmath>
 #include <vector>
 #include <algorithm>
@@ -6,6 +9,8 @@
 #include <sstream>
 
 using namespace std;
+
+int sigmaNum(int n);
 
 // Take the sum over integers from 1 to n
 int sigmaNum(int n)
@@ -85,7 +90,8 @@ int convert_to_decimal (vector<int> number, int base)
 {
     vector<int>::iterator iterD;
     int decimal = 0;
-    for(iterD = number.begin(), int i = 0 ; iterD < number.end() ; ++iterD, ++i)
+    int i;
+    for(iterD = number.begin(), i = 0 ; iterD < number.end() ; ++iterD, ++i)
     {
         decimal = decimal + (*iterD) * pow(base, i);
     }
@@ -105,3 +111,30 @@ string vec_ints_to_string(vector<int> i)
     string key = str.str();
     return key;
 }
+
+// Treat the effect of epistatic interactions as recessive
+double recEdges(int e, double s, int f = 4)
+{
+    double v;
+    if ( e == f ) { v = s;}
+    else { v = 0; }
+    return v;
+}
+
+// Treat the effect of epistatic interactons as dominant
+double domEdges(int e, double s, int f = 4)
+{
+    double v;
+    if ( e > 0 ) { v = s; }
+    else { v = 0; }
+    return v;
+}
+
+// Treat the effect of epistatic interactions as additive
+double addEdges(int e, double s, int f = 4)
+{
+    double v = s * ( e / f );
+    return v;
+}
+
+#endif //JUNGEN_ACC.CPP

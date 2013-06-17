@@ -14,6 +14,10 @@
 #include "sex_chromosome.h"
 #include "cytoplasm.h"
 #include "individual.h"
+#include "gene.h"
+#include "jungen_acc.cpp"
+#include "landscape.h"
+#include "interaction_graphs.h"
 
 using namespace std;
 
@@ -171,6 +175,32 @@ int main()
     m1.push_back(chrOne); m1.push_back(Y_One); m1.push_back(M_One);
     m2.push_back(chrTwo); m2.push_back(Y_Two); m2.push_back(M_Two);
 
+    cout << "a" << endl;
+    //Gene(int chr, double pos, vector<double> ae);
+    vector<double> addEffOne;
+    addEffOne.push_back(-0.01);
+    addEffOne.push_back(-0.02);
+    Gene* geneOne = new Gene(0, 0.1, addEffOne);
+
+    vector<double> addEffTwo;
+    addEffTwo.push_back(-0.03);
+    addEffTwo.push_back(-0.04);
+    Gene* geneTwo = new Gene(0, 0.5, addEffTwo);
+
+    cout << "b" << endl;
+    vector<Gene*> genes;
+    genes.push_back(geneOne);
+    genes.push_back(geneTwo);
+
+    //IntGraph( Gene* locA, Gene* locB, int ancA, int ancB, double s, int d );
+    vector<IntGraph*> intGraphs;
+    IntGraph* interactionOne = new IntGraph(geneOne, geneTwo, 0, 1, 0.5, 0);
+    intGraphs.push_back(interactionOne);
+
+    //Landscape( double a, int na, vector<Gene*> l, vector<IntGraph*> iG );
+    Landscape* l_scape = new Landscape(1.0, 2, genes, intGraphs);
+    cout << "c" << endl;
+    (*l_scape).printLandscape();
 
     Individual* femOne = new Individual(f1, f2);
     cout << "femOne" << endl;
@@ -237,6 +267,7 @@ int main()
         dump = (*dump).getDistP();
         d++;
     }
+
 
     cout << endl << "done" << endl;
     return 0;
