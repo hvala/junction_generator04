@@ -28,6 +28,7 @@ gsl_rng * r;
 int interferenceOpt = 1;
 int numDemes = 1;
 int Junction::numLocations = numDemes;
+Landscape* rFitLand;
 
 
 CNode* junkNode;
@@ -53,6 +54,7 @@ int main()
     //phenPool.push_back(hybrid);
 
     generation = 0;
+
 
     // Autosome One
     Junction* junOne = new Junction(0, 0, 0);
@@ -175,48 +177,52 @@ int main()
     m1.push_back(chrOne); m1.push_back(Y_One); m1.push_back(M_One);
     m2.push_back(chrTwo); m2.push_back(Y_Two); m2.push_back(M_Two);
 
-    cout << "a" << endl;
+
     //Gene(int chr, double pos, vector<double> ae);
     vector<double> addEffOne;
-    addEffOne.push_back(-0.01);
-    addEffOne.push_back(-0.02);
+    addEffOne.push_back(0);
+    addEffOne.push_back(0);
     Gene* geneOne = new Gene(0, 0.1, addEffOne);
 
     vector<double> addEffTwo;
-    addEffTwo.push_back(-0.03);
-    addEffTwo.push_back(-0.04);
+    addEffTwo.push_back(-0.01);
+    addEffTwo.push_back(-0.01);
     Gene* geneTwo = new Gene(0, 0.5, addEffTwo);
 
-    cout << "b" << endl;
+
     vector<Gene*> genes;
     genes.push_back(geneOne);
     genes.push_back(geneTwo);
 
     //IntGraph( Gene* locA, Gene* locB, int ancA, int ancB, double s, int d );
     vector<IntGraph*> intGraphs;
-    IntGraph* interactionOne = new IntGraph(geneOne, geneTwo, 0, 1, 0.5, 0);
+    IntGraph* interactionOne = new IntGraph(geneOne, geneTwo, 0, 1, -0.5, 3);
     intGraphs.push_back(interactionOne);
 
     //Landscape( double a, int na, vector<Gene*> l, vector<IntGraph*> iG );
-    Landscape* l_scape = new Landscape(1.0, 2, genes, intGraphs);
-    cout << "c" << endl;
-    (*l_scape).printLandscape();
+    rFitLand = new Landscape(1.0, 2, genes, intGraphs);
+
+    (*rFitLand).printLandscape();
 
     Individual* femOne = new Individual(f1, f2);
     cout << "femOne" << endl;
     (*femOne).displayChromosomes( );
+    cout << (*femOne).getRFitness() << endl;
 
     Individual* femTwo = new Individual(f2, f1);
     cout << "femTwo" << endl;
     (*femTwo).displayChromosomes( );
+    cout << (*femTwo).getRFitness() << endl;
 
     Individual* maleOne = new Individual(f1, m2);
     cout << "maleOne" << endl;
     (*maleOne).displayChromosomes( );
+    cout << (*maleOne).getRFitness() << endl;
 
     Individual* maleTwo = new Individual(m1, f2);
     cout << "maleTwo" << endl;
     (*maleTwo).displayChromosomes(  );
+    cout << (*maleTwo).getRFitness() << endl;
 
     vector<Chromosome*> gamete1 = (*femOne).makeGamete();
 
@@ -254,6 +260,7 @@ int main()
     Individual* indTen = new Individual(gamete1, gamete3);
 
     (*indTen).displayChromosomes();
+    cout << (*indTen).getRFitness() << endl;
 
     cout << endl;
 
@@ -270,5 +277,12 @@ int main()
 
 
     cout << endl << "done" << endl;
+
+    int integer = 50;
+    vector<int> key = change_base(50, 2, 8);
+    string sKey = vec_ints_to_string(key);
+    int decKey = convert_to_decimal(key, 2);
+    cout << integer << "\t" << sKey << "\t" << decKey << endl;
+
     return 0;
 }

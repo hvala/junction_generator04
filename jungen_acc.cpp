@@ -8,6 +8,8 @@
 #include <string>
 #include <sstream>
 
+#include "landscape.h"
+
 using namespace std;
 
 int sigmaNum(int n);
@@ -54,7 +56,7 @@ int n_choose_k (int n, int k)
 }
 
 // express an integer as a string from a different base system -- base < 10
-vector<int> change_base(int x, int base)
+vector<int> change_base(int x, int base, int numDigits)
 {
     vector<int> newNumber;
 
@@ -65,6 +67,12 @@ vector<int> change_base(int x, int base)
     {
         ++i;
     } while ( pow(base, i) <= x );
+
+    for( numDigits ; numDigits > i ; numDigits-- )
+    {
+        newNumber.push_back(0);
+    }
+
     --i;
 
     // count the number of times the next greatest base power fits into the number
@@ -86,12 +94,12 @@ vector<int> change_base(int x, int base)
 }
 
 // take a vector of digits representing a number in a base system 'b', and convert it to a decimal number
-int convert_to_decimal (vector<int> number, int base)
+int convert_to_decimal(vector<int> number, int base)
 {
     vector<int>::iterator iterD;
     int decimal = 0;
     int i;
-    for(iterD = number.begin(), i = 0 ; iterD < number.end() ; ++iterD, ++i)
+    for(iterD = number.begin(), i = number.size() - 1 ; iterD < number.end() ; ++iterD, --i)
     {
         decimal = decimal + (*iterD) * pow(base, i);
     }
@@ -133,7 +141,9 @@ double domEdges(int e, double s, int f = 4)
 // Treat the effect of epistatic interactions as additive
 double addEdges(int e, double s, int f = 4)
 {
-    double v = s * ( e / f );
+    double edges = e;
+    double total = f;
+    double v = s * ( edges / total );
     return v;
 }
 

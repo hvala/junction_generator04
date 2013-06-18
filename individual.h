@@ -11,6 +11,7 @@
 #include "cytoplasm.h"
 #include "junction.h"
 #include "gene.h"
+#include "landscape.h"
 
 using namespace std;
 
@@ -19,6 +20,7 @@ extern int generation;
 extern int interferenceOpt;
 extern vector<Junction*> junctionPool;
 extern int numChromosomes;
+extern Landscape* rFitLand;
 
 
 class Individual
@@ -61,6 +63,7 @@ class Individual
         vector<double> parCrossovers(vector<double> co, double p);
         Chromosome * recombination(Chromosome* c, Chromosome* d, vector<double> coList, ChrType t);
         bool migrated;
+        double phenotype(vector<Chromosome*> g, Landscape* l);
 
         // Summary Statistics Calculators
         int calc_numJunctOne(int x);
@@ -95,9 +98,6 @@ Individual::Individual(vector<Chromosome*> gam1, vector<Chromosome*> gam2, int l
     vector<Chromosome*>::iterator iterG2;
 
     sex = -1;
-    phenotypes.push_back(1);
-    phenotypes.push_back(1);
-    phenotypes.push_back(1);
 
     for( iterG1 = gam1.begin(), iterG2 = gam2.begin() ; iterG1 < gam1.end() - 1 ; iterG1++ , iterG2++ )
     {
@@ -152,26 +152,20 @@ Individual::Individual(vector<Chromosome*> gam1, vector<Chromosome*> gam2, int l
 
     // Determine the phenotypes of the individual
     // for each gene, get the genotype and alter the phenotype accordingly
+    // calculate the reproductive fitness
+    double rFitness = phenotype(genome, rFitLand);
+    phenotypes.push_back(rFitness);
 
-    // get the number of genes for each phenotype
+    // calculate the developmental fitness
+    // double dFitness = phenotype(genome, dFitLand);
+    // phenotypes.push_back(dFitness);
+
+    // calculate the environmental fitness
+    // double eFitness = phenotype(genome, eFitLand);
+    // phenotypes.push_back(eFitness);
 
 
 
-    /*
-    // Apply selection for single locus models
-    vector<SelMarker>::iterator iterSM;
-    for ( iterSM = selMarkers.begin() ; iterSM < selMarkers.end() ; iterSM++ )
-    {
-        (*iterSM).sel_Ind(offspring);
-    }
-
-    // Apply selection for multilocus models
-    vector<EpiMarker>::iterator iterEM;
-    for ( iterEM = epiMarkers.begin() ; iterEM < epiMarkers.end() ; iterEM++ )
-    {
-        (*iterEM).sel_Ind(offspring);
-    }
-    */
 }
 
 // INDIVIDUAL DESTRUCTOR
@@ -632,6 +626,29 @@ double Individual::calc_HybridIndex()
 
     return hybInd;
 }
+
+// GET THE GENOTYPE KEY FOR A GENE IN AN INDIVIDUAL
+double Individual::phenotype(vector<Chromosome*> g, Landscape* l)
+{
+    vector<int> genotype;
+    vector<Gene*> genes = (*l).getLoci();
+    vector<Gene*>::iterator iterG;
+
+    for( iterG = genes.begin() ; iterG < genes.end() ; iterG++ )
+    {
+        int chr =  (**iterG).getChr() * 2;
+        int pos =  (**iterG).getPos();
+
+        genotype.push_back( (*g[ chr     ] ).positionAnc(pos) );
+        genotype.push_back( (*g[ chr + 1 ] ).positionAnc(pos) );
+    }
+
+    string strKey = vec_ints_to_string(genotype);
+    double phenotype = (*l).findPhenotype(strKey);
+
+    return phenotype;
+}
+
 /*
 // CALCULATE THE FRACTION OF THE GENOME THAT IS HETEROGENIC
 double Individual::calc_FractionHeterogenic()
