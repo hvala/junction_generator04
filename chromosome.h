@@ -52,7 +52,7 @@ extern vector<Junction*> junctionPool;
 //
 //
 
-enum ChrType { A, W, X, Y, Z, M, C, CP };
+enum ChrType { A = 0, W = 1, X = 2, Y = 3, Z = 4, M = 5, C = 6, CP = 7 };
 
 class Chromosome
 {
@@ -72,7 +72,7 @@ class Chromosome
         CNode *getCentromere() { return centromere; }
         CNode *getTelomere() { return telomere; }
         virtual double getLength() {};
-        ChrType getType() { return type; }
+        virtual ChrType getType() { return type; }
         virtual int getNumber() {};
         virtual double getParB() {};
 

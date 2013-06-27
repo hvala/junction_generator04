@@ -54,7 +54,7 @@ double IntGraph::calc_Selection(int a1, int a2, int b1, int b2)
     if( a2 == ancA && b1 == ancB )  { edges++; }
     if( a2 == ancA && b2 == ancB )  { edges++; }
 
-    cout << a1 << "\t" << a2 << "\t" << b1 << "\t" << b2 << "\t\t" << edges << endl;
+    //cout << a1 << "\t" << a2 << "\t" << b1 << "\t" << b2 << "\t\t" << edges << endl;
 
     switch(edgeFX)
     {

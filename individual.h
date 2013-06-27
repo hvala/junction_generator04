@@ -27,7 +27,7 @@ class Individual
 {
     public:
         // constuctor prototype
-        Individual(vector<Chromosome*> gam1, vector<Chromosome*> gam2, int l, bool m );
+        Individual(Gamete* matGamete, Gamete* patGamete, int l, bool m );
         friend class Gene;
 
         // destructor prototype
@@ -56,7 +56,7 @@ class Individual
         void setPhenotype( int i, double p ) { phenotypes[i] = p; }
         Chromosome* gameteChromosome(Chromosome* c, Chromosome* d);
         Chromosome* gameteHetChromosome(Chromosome* c, Chromosome* d );
-        vector<Chromosome*> makeGamete();
+        Gamete* makeGamete();
         vector<double> oneCO(double m);
         vector<double> coNoInt(int xo, double l);
         vector<double> coGamInt(double l);
@@ -91,9 +91,11 @@ class Individual
 };
 
 // INDIVIDUAL CONSTRUCTOR
-Individual::Individual(vector<Chromosome*> gam1, vector<Chromosome*> gam2, int l = 0, bool m = false ):
+Individual::Individual(Gamete* matGamete, Gamete* patGamete, int l = 0, bool m = false ):
     lifespan(generation), location(l), migrated(m)
 {
+    vector<Chromosome*> gam1 = (*matGamete).getHapGenome();
+    vector<Chromosome*> gam2 = (*patGamete).getHapGenome();
     vector<Chromosome*>::iterator iterG1;
     vector<Chromosome*>::iterator iterG2;
 
@@ -102,6 +104,7 @@ Individual::Individual(vector<Chromosome*> gam1, vector<Chromosome*> gam2, int l
     for( iterG1 = gam1.begin(), iterG2 = gam2.begin() ; iterG1 < gam1.end() - 1 ; iterG1++ , iterG2++ )
     {
         ChrType chromoType1 = (**iterG1).getType();
+
         ChrType chromoType2 = (**iterG2).getType();
 
         if ( chromoType1 == Y || chromoType2 == Y )
@@ -123,6 +126,7 @@ Individual::Individual(vector<Chromosome*> gam1, vector<Chromosome*> gam2, int l
 
         genome.push_back(*iterG1);
         genome.push_back(*iterG2);
+
 
     }
 
@@ -198,9 +202,10 @@ void Individual::textChromosomes(int x = 2)
 }
 
 // MAKE A GAMETE FROM AN INDIVIDUAL
-vector<Chromosome*> Individual::makeGamete()
+Gamete* Individual::makeGamete()
 {
     vector<Chromosome*> gamete;
+    Gamete* newGamete;
 
     Chromosome* g_Chr;
 
@@ -242,15 +247,16 @@ vector<Chromosome*> Individual::makeGamete()
         }
     }
 
-    return gamete;
+    newGamete = new Gamete(gamete);
+    return newGamete;
 }
 
 // MAKE A CHROMOSOME FOR THE GAMETE
 Chromosome* Individual::gameteChromosome(Chromosome* c, Chromosome* d)
 {
-    double mu = (*c).getLength();        // the genetic length of the chromosome provides the mean of a Poisson distribution of crossover number
+    double mu = (*c).getLength();               // the genetic length of the chromosome provides the mean of a Poisson distribution of crossover number
     double strandOpt = gsl_rng_uniform(r);      // strandOpt chooses which of the parental gametes will be chosen, either to be passed on, or as the starting strand for recombination
-    Chromosome* gam_Chr;                 // a vector of pointers to the chromosomes that will compose the gamete
+    Chromosome* gam_Chr;                        // a vector of pointers to the chromosomes that will compose the gamete
     vector<double> crossovers;                  // this vector stores a list of crossovers to be used by the recombination function if needed
 
     // make the gamete according to the type of recombination being used
@@ -421,6 +427,7 @@ Chromosome* Individual::recombination(Chromosome* c, Chromosome* d, vector<doubl
     oppB = (*d).getCentromere();
 
 
+
     CNode* recA = new ( (*curB).newAddyAssign() ) CNode( (*curB).getJunction(), location );        // recA is the following CNode pointer on the recombinant, and starts by pointing to the centromere on the current strand
 
     CNode* recf;
@@ -466,6 +473,7 @@ Chromosome* Individual::recombination(Chromosome* c, Chromosome* d, vector<doubl
 
     for( iterCO = coList.begin() ; iterCO < coList.end() ; iterCO++ )   // for each crossover in the list
     {
+        cout << *iterCO << endl;
 
         while( ( (*curB).getJPosition() <= *iterCO && (*curB).getDistP() != 0 ) )  // until curB goes past the crossover, or reaches the end of the chromosome
         {
@@ -489,6 +497,8 @@ Chromosome* Individual::recombination(Chromosome* c, Chromosome* d, vector<doubl
         int curAnc = (*curA).getJAncestry();    // get the ancestries of the strands at the crossover's position
 
         int oppAnc = (*oppA).getJAncestry();
+
+
 
         if ( curAnc != oppAnc )                 // if the ancestries differ make a new junction and add it to the strand
         {
@@ -527,6 +537,8 @@ Chromosome* Individual::recombination(Chromosome* c, Chromosome* d, vector<doubl
     }
 
     (*recombinant).setTelomere(recf);
+
+    (*recombinant).displayChromosome();
 
     return recombinant;
 }

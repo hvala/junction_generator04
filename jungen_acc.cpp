@@ -8,11 +8,16 @@
 #include <string>
 #include <sstream>
 
+#include "gamete.h"
 #include "landscape.h"
+#include "chromosome.h"
+#include "autosome.h"
+#include "sex_chromosome.h"
+#include "cytoplasm.h"
 
 using namespace std;
 
-int sigmaNum(int n);
+extern vector<Junction*> junctionPool;
 
 // Take the sum over integers from 1 to n
 int sigmaNum(int n)
@@ -146,5 +151,111 @@ double addEdges(int e, double s, int f = 4)
     double v = s * ( edges / total );
     return v;
 }
+
+//MAKE A GAMETE POOL FOR A POPULATION WITH XY CHROMOSOMES
+vector<Gamete*> XYgametePool(int anc, vector<double> lengths, vector<ChrType> types, double p = 0.001)
+{
+    vector<Gamete*> gametePool;
+
+    for ( int i = 0 ; i < anc ; i++ )
+    {
+        int chrN = 0;
+        vector<Chromosome*> chrPool;
+        Chromosome* hetGamChr;
+
+        Junction* cen = new Junction(chrN, 0, i);
+        junctionPool.push_back(cen);
+        Junction* tel = new Junction(chrN, lengths[0], i);
+        junctionPool.push_back(tel);
+
+
+        CNode *cent1 = new CNode(cen);
+        (*cent1).setProxP(0);
+        CNode *telo1 = new CNode(tel);
+        (*telo1).setDistP(0);
+
+        (*cent1).setDistP(telo1);
+        (*telo1).setProxP(cent1);
+
+        hetGamChr = new SexChromosome(cent1, telo1, chrN, lengths[0], Y);
+        chrPool.push_back(hetGamChr);
+
+
+        vector<ChrType>::iterator iterT;
+        vector<double>::iterator iterL;
+        chrN++;
+
+        for(iterT = types.begin(), iterL = lengths.begin() ; iterT < types.end() , iterL < lengths.end() ; iterT++, iterL++ )
+        {
+            Junction* cen = new Junction(chrN, 0, i);
+            junctionPool.push_back(cen);
+            Junction* tel = new Junction(chrN, *iterL, i);
+            junctionPool.push_back(tel);
+
+            CNode *cent1 = new CNode(cen);
+            (*cent1).setProxP(0);
+            CNode *telo1 = new CNode(tel);
+            (*telo1).setDistP(0);
+
+            (*cent1).setDistP(telo1);
+            (*telo1).setProxP(cent1);
+
+            Chromosome* newChr;
+            if ( *iterT == X )
+            {
+                newChr = new SexChromosome(cent1, telo1, chrN, *iterL, *iterT, p);
+
+            }
+            else if ( (*iterT) == M || (*iterT) == C || (*iterT) == CP )
+            {
+                newChr = new Cytoplasm(cent1, telo1, chrN, 0, *iterT, 1);
+
+            }
+            else
+            {
+                newChr = new Autosome(cent1, telo1, chrN, *iterL, *iterT);
+
+            }
+
+
+
+            chrPool.push_back(newChr);
+
+            chrN++;
+        }
+
+
+
+        vector<Chromosome*> maleGenome;
+        maleGenome.push_back(chrPool[0]);
+
+
+
+        vector<Chromosome*>::iterator iterC;
+        for( iterC = chrPool.begin() + 2 ; iterC < chrPool.end() ; iterC++ )
+        {
+            maleGenome.push_back(*iterC);
+        }
+
+        Gamete* maleGamete = new Gamete(maleGenome);
+        gametePool.push_back(maleGamete);
+
+        vector<Chromosome*> femaleGenome;
+        for( iterC = chrPool.begin() + 1 ; iterC < chrPool.end() ; iterC++ )
+        {
+            femaleGenome.push_back(*iterC);
+        }
+
+        Gamete* femaleGamete = new Gamete(femaleGenome);
+        gametePool.push_back(femaleGamete);
+
+    }
+
+    return gametePool;
+}
+
+//MAKE A GAMETE POOL FOR A POPULATION WITH ZW CHROMOSOMES
+
+//MAKE A GAMETE POOL FOR A POPULATION OF DIPLOIDS WITHOUT SEX CHROMOSOMES
 
 #endif //JUNGEN_ACC.CPP

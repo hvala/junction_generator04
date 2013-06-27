@@ -110,7 +110,7 @@ CNode* CNode::newAddyAssign()
     }
     else
     {
-        for ( int i = 0 ; i < 1 ; i++ )
+        for ( int i = 0 ; i < 10 ; i++ )
         {
             CNode* newAddy = new CNode(0,0);
             (*newAddy).setDistP(s_newAddy);

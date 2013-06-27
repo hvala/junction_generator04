@@ -69,7 +69,7 @@ class Junction
         void textJunction();
         void deallocCN(int i);
 
-        //static vector<Junction*> junctionPool;
+        static vector<Junction*> junctionPool;
 
     private:
         int chromosome;         // the chromosome on which the junction resides
@@ -116,4 +116,5 @@ void Junction::textJunction()
 {
     errorCheck << "\t" << chromosome << "\t" << position << "\t" << ancestry << "\t" << j_gen << "\t" << numOccur << endl; ;
 }
+
 #endif // JUNCTION003_H

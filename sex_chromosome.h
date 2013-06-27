@@ -19,6 +19,7 @@ class SexChromosome : public Chromosome
         // getters
         double virtual getParB() { return parB; }
         double virtual getLength() { return length;}
+        ChrType virtual getType() { return type; }
 
         //Sex chromosome functions
         virtual int positionAnc(double p);

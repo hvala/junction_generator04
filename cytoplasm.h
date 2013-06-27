@@ -16,6 +16,7 @@ class Cytoplasm : public Chromosome
         // getters
         double virtual getParB() { return 0.0; }
         double virtual getLength() { return 0.0; }
+        ChrType virtual getType() {return type; }
 
 
         // display functions
@@ -33,7 +34,7 @@ class Cytoplasm : public Chromosome
 
 // AUTOSOME CONSTRUCTOR
 Cytoplasm::Cytoplasm(CNode * cen, CNode * tel, int n, double l = 0, ChrType t = M, double p = 1):
-    Chromosome(cen, tel, n, l, t, p)
+    Chromosome(cen, tel, n, 0, t, 1)
 {
 
 }

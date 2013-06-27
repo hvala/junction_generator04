@@ -17,6 +17,7 @@ class Autosome : public Chromosome
         int virtual getNumber() { return number; }
         double virtual getLength() { return length; }
         double virtual getParB() { return 1.0; }
+        ChrType virtual getType() { return A; }
 
         // chromosome functions
         virtual int positionAnc(double p);
